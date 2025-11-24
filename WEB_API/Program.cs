@@ -4,12 +4,17 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 
-builder.WebHost.ConfigureKestrel(options =>
+var port = Environment.GetEnvironmentVariable("PORT");
+
+if (!string.IsNullOrEmpty(port))
 {
-    options.ListenAnyIP(int.Parse(port));
-});
+    
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(int.Parse(port));
+    });
+}
 
 builder.Services.AddControllers();
 
@@ -21,6 +26,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
 
 if (app.Environment.IsDevelopment())
 {
